@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="anpho.f2" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:rim="http://www.blackberry.com/ns/widgets">
+    <feature name="com.blackberry.bbm.platform" value="com.blackberry.bbm.platform" />
+    <rim:permissions>
+        <rim:permit>bbm_connect</rim:permit>
+    </rim:permissions>
+    <feature name="com.blackberry.community.LowLatencyAudio" value="com.blackberry.community.LowLatencyAudio" />
+    <feature name="com.blackberry.community.screenshot" value="com.blackberry.community.screenshot" />
+    <feature name="com.blackberry.invoke" value="com.blackberry.invoke" />
+    <feature name="com.blackberry.invoke.card" value="com.blackberry.invoke.card" />
+    <feature name="com.blackberry.io" value="com.blackberry.io" />
+    <feature name="com.blackberry.ui.dialog" value="com.blackberry.ui.dialog" />
+    <feature name="com.blackberry.ui.toast" value="com.blackberry.ui.toast" />
+    <feature name="com.blackberry.utils" />
+    <name>Flappy 2048</name>
+    <author>anpho</author>
+    <description>2048 &amp; Flappy bird</description>
+    <content src="index.html" />
+    <icon src="114.png" />
+    <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="ChildBrowser" value="enable" />
+    <preference name="DiskCache" value="enable" />
+    <preference name="HideKeyboardFormAccessoryBar" value="disable" />
+    <preference name="Orientation" value="default" />
+    <preference name="PopupBlocker" value="disable" />
+    <preference name="WebSecurity" value="enable" />
+</widget>
