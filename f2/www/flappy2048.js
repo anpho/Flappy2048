@@ -1,3 +1,4 @@
+var bbm_connected = false;
 document.addEventListener('deviceready', function(e) {
 	preloadAudio();
 	// Create callback invoked when access changes
@@ -7,19 +8,19 @@ document.addEventListener('deviceready', function(e) {
 	});
 	return true;
 }, false);
-var bbm_connected = false;
-
 
 function accessChangedCallback(accessible, status) {
 	if (status == "allowed") {
 		bbm_connected = true;
-		// Access allowed
+		console.log('[OK] BBM CONNECTTED.')
 	} else if (status == "user") {
-		bbm_connected = false
-		// Access blocked by user
+		bbm_connected = false;
+		console.error('[ERROR] Access blocked by user');
 	} else if (status == "rim") {
-		bbm_connected = false
-		// Access blocked by RIM
+		bbm_connected = false;
+		console.error('[ERROR] Access blocked by RIM');
+	} else {
+		console.error(accessible ? "[OK] " : "[ERROR] " + status);
 	}
 };
 
@@ -30,13 +31,12 @@ document.body.style.overflow = 'hidden';
 
 
 var raf = function(x) {
-		var ops = {
-			title: "Error"
-		};
-		blackberry.ui.dialog.standardAskAsync("Unknown Error Occurs,Please contact the developer: anphorea@gmail.com .", blackberry.ui.dialog.D_OK, function() {}, ops);
-	}
+	var ops = {
+		title: "Error"
+	};
+	blackberry.ui.dialog.standardAskAsync("Unknown Error Occurs,Please contact the developer: anphorea@gmail.com .", blackberry.ui.dialog.D_OK, function() {}, ops);
+}
 if (window.requestAnimationFrame) raf = window.requestAnimationFrame; // Firefox 23 / IE 10 / Chrome / Safari 7 (incl. iOS)
-else if (window.mozRequestAnimationFrame) raf = window.mozRequestAnimationFrame; // Firefox < 23
 else if (window.webkitRequestAnimationFrame) raf = window.webkitRequestAnimationFrame; // Older versions of Safari / Chrome
 var game = {};
 game.ended = false;
@@ -72,207 +72,212 @@ var android_x_div = document.createElement('div');
 
 
 var resize = function() {
-		ww = Math.ceil(window.innerWidth);
-		hh = Math.ceil(window.innerHeight);
+	ww = Math.ceil(window.innerWidth);
+	hh = Math.ceil(window.innerHeight);
 
-		if (hh > ww) {
-			parody.div.innerHTML = 'If you are having trouble playing on your phone, try turning it sideways to landscape mode!'; //This website is a parody and is not affiliated with Flappy Bird or .GEARS Studios';
-		} else {
-			parody.div.innerHTML = '';
-		}
-
-
-
-		if (android_app_img != null) {
-			var sc1 = Math.max(hh, 676) / 676;
-			var sc2 = Math.max(ww, 512) / 512;
-			var sc = Math.min(sc1, sc2);
-			var img = android_app_img;
-			var iw = Math.round(512 * sc);
-			var ih = Math.round(676 * sc);
-			img.width = iw;
-			img.height = ih;
-			android_hider_div.style.width = ww + 'px';
-			android_hider_div.style.height = hh + 'px';
-			android_app_div.style.left = Math.round(ww / 2 - iw / 2) + 'px';
-			android_app_div.style.top = Math.round(hh / 2 - ih / 2) + 'px';
-			android_x_div.style.left = Math.round(ww / 2 - iw / 2 + 0) + 'px';
-			android_x_div.style.top = Math.round(hh / 2 - ih / 2 - 36) + 'px';
-		}
-
-
-		game.div.style.width = ww + 'px';
-		game.div.style.height = hh + 'px';
-
-		game.bg.style.width = ww + 'px';
-		game.bg.style.height = hh + 'px';
-
-		ground.canvas.width = ww + 96;
-		ground.canvas.height = 88;
-		ground.ctx.fillStyle = '#bab8af';
-		ground.ctx.fillRect(0, 0, ww + 96, 88);
-		var gx = 0;
-		while (gx < (ww + 256)) {
-			try {
-				ground.ctx.drawImage(ground.bit, gx, 0);
-			} catch (e) {
-
-			}
-			gx += 48;
-		}
-		ground.x = 0;
-		ground.canvas.style.left = '0px';
-		ground.canvas.style.top = (hh - 88) + 'px';
-
-
-		logo.reposition();
-		gameover.reposition();
-		c2s.reposition();
-		sndo.reposition();
-		fbshare.reposition();
-		playagain.reposition();
-
-
-		parody.div.style.left = '16px'; //Math.round((ww - 500)/2)+'px';
-		parody.div.style.top = '16px';
-
-
-
-		for (var i = 0; i < scpts.length; i++) {
-			var scpt = scpts[i];
-			xx = scpt.x;
-			yy = scpt.y;
-			var div = score.divs[i];
-			div.style.left = Math.round(xx + (ww - 300) / 2) + 'px';
-			div.style.top = (yy + 10) + 'px';
-		}
-
-
-
-
+	if (hh > ww) {
+		parody.div.innerHTML = 'If you are having trouble playing on your phone, try turning it sideways to landscape mode!'; //This website is a parody and is not affiliated with Flappy Bird or .GEARS Studios';
+	} else {
+		parody.div.innerHTML = '';
 	}
+
+
+
+	if (android_app_img != null) {
+		var sc1 = Math.max(hh, 676) / 676;
+		var sc2 = Math.max(ww, 512) / 512;
+		var sc = Math.min(sc1, sc2);
+		var img = android_app_img;
+		var iw = Math.round(512 * sc);
+		var ih = Math.round(676 * sc);
+		img.width = iw;
+		img.height = ih;
+		android_hider_div.style.width = ww + 'px';
+		android_hider_div.style.height = hh + 'px';
+		android_app_div.style.left = Math.round(ww / 2 - iw / 2) + 'px';
+		android_app_div.style.top = Math.round(hh / 2 - ih / 2) + 'px';
+		android_x_div.style.left = Math.round(ww / 2 - iw / 2 + 0) + 'px';
+		android_x_div.style.top = Math.round(hh / 2 - ih / 2 - 36) + 'px';
+	}
+
+
+	game.div.style.width = ww + 'px';
+	game.div.style.height = hh + 'px';
+
+	game.bg.style.width = ww + 'px';
+	game.bg.style.height = hh + 'px';
+
+	ground.canvas.width = ww + 96;
+	ground.canvas.height = 88;
+	ground.ctx.fillStyle = '#bab8af';
+	ground.ctx.fillRect(0, 0, ww + 96, 88);
+	var gx = 0;
+	while (gx < (ww + 256)) {
+		try {
+			ground.ctx.drawImage(ground.bit, gx, 0);
+		} catch (e) {
+
+		}
+		gx += 48;
+	}
+	ground.x = 0;
+	ground.canvas.style.left = '0px';
+	ground.canvas.style.top = (hh - 88) + 'px';
+
+
+	logo.reposition();
+	gameover.reposition();
+	c2s.reposition();
+	sndo.reposition();
+	fbshare.reposition();
+	playagain.reposition();
+
+
+	parody.div.style.left = '16px'; //Math.round((ww - 500)/2)+'px';
+	parody.div.style.top = '16px';
+
+
+
+	for (var i = 0; i < scpts.length; i++) {
+		var scpt = scpts[i];
+		xx = scpt.x;
+		yy = scpt.y;
+		var div = score.divs[i];
+		div.style.left = Math.round(xx + (ww - 300) / 2) + 'px';
+		div.style.top = (yy + 10) + 'px';
+	}
+
+
+
+}
 
 var want_image_count = 0;
 var loadGameImage = function(n) {
-		want_image_count++;
-		var o = document.createElement('img');
-		o.onload = function() {
-			want_image_count--;
-			if ((want_image_count == 0) && (want_sound_count == 0)) {
-				gameLoaded();
-			}
+	want_image_count++;
+	var o = document.createElement('img');
+	o.onload = function() {
+		want_image_count--;
+		if ((want_image_count == 0) && (want_sound_count == 0)) {
+			gameLoaded();
 		}
-		o.src = n;
-		return o;
 	}
+	o.src = n;
+	return o;
+}
 var want_sound_count = 0;
 
 var game_loaded = false;
 var gameLoaded = function() {
-		game.div.appendChild(game.bg);
-		game.div.appendChild(ground.canvas);
-		game.div.appendChild(logo.img);
-		game.div.appendChild(gameover.img);
-		document.body.appendChild(fbshare.img);
-		document.body.appendChild(playagain.img);
-		game.div.appendChild(c2s.img);
-		game.div.appendChild(sndo.div);
-		game.div.appendChild(parody.div);
-		for (var i = score.divs.length - 1; i >= 0; i--) {
-			game.div.appendChild(score.divs[i]);
-		}
-		game.div.appendChild(bird.div);
-		game_loaded = true;
-		resize();
-		raf(oef);
-		oef();
+	game.div.appendChild(game.bg);
+	game.div.appendChild(ground.canvas);
+	game.div.appendChild(logo.img);
+	game.div.appendChild(gameover.img);
+	document.body.appendChild(fbshare.img);
+	document.body.appendChild(playagain.img);
+	game.div.appendChild(c2s.img);
+	game.div.appendChild(sndo.div);
+	game.div.appendChild(parody.div);
+	for (var i = score.divs.length - 1; i >= 0; i--) {
+		game.div.appendChild(score.divs[i]);
+	}
+	game.div.appendChild(bird.div);
+	game_loaded = true;
+	resize();
+	raf(oef);
+	oef();
 
 
-		document.body.onmousedown = function() {
-			if (!disable_mouse) {
-				doFlap();
-			}
-		}
-
-		document.body.addEventListener('touchstart', function(e) {
-			disable_mouse = true;
+	document.body.onmousedown = function() {
+		if (!disable_mouse) {
 			doFlap();
-		}, false);
-
-		document.body.onkeydown = function(e) {
-			if (e.keyCode == 32) {
-				doFlap();
-			}
 		}
-
-		bird.setValue(1);
-
 	}
 
+	document.body.addEventListener('touchstart', function(e) {
+		disable_mouse = true;
+		doFlap();
+	}, false);
+
+	document.body.onkeydown = function(e) {
+		if (e.keyCode == 32) {
+			doFlap();
+		} else if (e.keyCode == 52) {
+			// $ is pressed
+			if (sndo.has_sound) {
+				sndo.div.style.backgroundPosition = '-64px 0px';
+				sndo.has_sound = false;
+			} else {
+				sndo.div.style.backgroundPosition = '0px 0px';
+				sndo.has_sound = true;
+			}
+		}
+	}
+
+	bird.setValue(1);
+
+}
 
 
 
 var last_flap_tm = 0;
 var doFlap = function() {
-		if (game.ended) { // then we have to set ended=false with the play again button
-			return false;
-		}
-		if (app_img_showing) {
-			return false;
-		}
-		if (!game.started) {
-			fr = 0;
-			wgfr = 0;
-			nbfr = fnbfr = 100;
-			points = 0;
-			score.update();
-
-			for (var i = walls.length - 1; i >= 0; i--) {
-				var wall = walls[i];
-				var cells = wall.cells;
-				for (var j = cells.length - 1; j >= 0; j--) {
-					game.div.removeChild(cells[j].div);
-				}
-			}
-			walls = [];
-
-			doubling = false;
-			doubling_cell = null;
-
-			bird.stuck_on_bottom = false;
-			bird.stuck_on_top = false;
-			bird.setValue(1);
-			bird.dsz = 0;
-			bird.ww = cell_size; // + 150;
-			bird.div.style.width = bird.ww + 'px';
-			game.cur_wall_val = 1; // 1;
-			game.started = true;
-			wall_fr_gap = wall_fr_start_gap;
-			bird.reset();
-			logo.showing = false;
-			logo.hiding = true;
-			gameover.showing = false;
-			gameover.hiding = true;
-			c2s.showing = false;
-			c2s.hiding = true;
-			fbshare.showing = false;
-			fbshare.hiding = true;
-			playagain.showing = false;
-			playagain.hiding = true;
-			parody.div.style.display = 'none';
-			points = 0;
-			score.update();
-		}
-		var ctm = new Date().getTime();
-		var tslc = 1 - Math.min(1, Math.max(0, (ctm - last_flap_tm) / 666));
-		last_flap_tm = ctm;
-		bird.vy = -8 - 5 * tslc;
-		bird.dang = -.5;
-		flap.play();
-		wing.vfr = 2;
+	if (game.ended) { // then we have to set ended=false with the play again button
+		return false;
 	}
+	if (app_img_showing) {
+		return false;
+	}
+	if (!game.started) {
+		fr = 0;
+		wgfr = 0;
+		nbfr = fnbfr = 100;
+		points = 0;
+		score.update();
 
+		for (var i = walls.length - 1; i >= 0; i--) {
+			var wall = walls[i];
+			var cells = wall.cells;
+			for (var j = cells.length - 1; j >= 0; j--) {
+				game.div.removeChild(cells[j].div);
+			}
+		}
+		walls = [];
 
+		doubling = false;
+		doubling_cell = null;
+
+		bird.stuck_on_bottom = false;
+		bird.stuck_on_top = false;
+		bird.setValue(1);
+		bird.dsz = 0;
+		bird.ww = cell_size; // + 150;
+		bird.div.style.width = bird.ww + 'px';
+		game.cur_wall_val = 1; // 1;
+		game.started = true;
+		wall_fr_gap = wall_fr_start_gap;
+		bird.reset();
+		logo.showing = false;
+		logo.hiding = true;
+		gameover.showing = false;
+		gameover.hiding = true;
+		c2s.showing = false;
+		c2s.hiding = true;
+		fbshare.showing = false;
+		fbshare.hiding = true;
+		playagain.showing = false;
+		playagain.hiding = true;
+		parody.div.style.display = 'none';
+		points = 0;
+		score.update();
+	}
+	var ctm = new Date().getTime();
+	var tslc = 1 - Math.min(1, Math.max(0, (ctm - last_flap_tm) / 666));
+	last_flap_tm = ctm;
+	bird.vy = -8 - 5 * tslc;
+	bird.dang = -.5;
+	flap.play();
+	wing.vfr = 2;
+}
 
 
 
@@ -342,7 +347,6 @@ game.started = false;
 
 
 
-
 var wing = {};
 
 wing.fr = 0;
@@ -361,9 +365,6 @@ wing.ctx2 = wing.canvas2.getContext('2d');
 
 
 
-
-
-
 var wingfill = {};
 
 wingfill.img = loadGameImage('f2/wingfill.png'); // 150 x 131
@@ -371,8 +372,6 @@ wingfill.canvas = document.createElement('canvas');
 wingfill.canvas.width = 150;
 wingfill.canvas.height = 131;
 wingfill.ctx = wingfill.canvas.getContext('2d');
-
-
 
 
 
@@ -425,32 +424,43 @@ fbshare.reposition = function() {
 	fbshare.img.style.top = Math.floor(Math.cos(fbshare.fr / 12) * 5 + (hh + 150 + 80 - 88) / 2) + 'px';
 }
 fbshare.img.onclick = function() {
-	console.log(points + "/" + highscore);
+	console.log("[GAMEOVER] POINTS:" + points + "/" + highscore);
 	var text = "I scored {p} points in #flappy2048 !".replace('{p}', points);
-	if (bbm_connected) blackberry.bbm.platform.self.setPersonalMessage(text, function(e) {
-		console.log(e);
-	})
+	if (!bbm_connected) {
+		blackberry.bbm.platform.register({
+			uuid: "2737c97b-ca6a-43c8-be91-4b757aa4e9a8" // Randomly generated UUID
+		});
+		blackberry.bbm.platform.self.setPersonalMessage(text, function(e) {
+			console.log(e);
+		})
+	} else {
+		blackberry.bbm.platform.self.setPersonalMessage(text, function(e) {
+			console.log(e);
+		})
+	}
+
 	try {
 		var buttons = ["Yes", "No"];
 		var ops = {
-			title: "You scored "+points
+			title: "You scored " + points
 		};
-		blackberry.ui.dialog.customAskAsync(bbm_connected ? "Do you wanna share on other platforms?" : "Do you wanna share your score?", buttons, function(s) {
-			console.log(s);
-			if (s == 0) {
-				var request = {
-					action: 'bb.action.SHARE',
-					mime: 'text/plain',
-					data: text,
-					target_type: ["VIEWER", "CARD"]
-				};
-				blackberry.invoke.card.invokeTargetPicker(request, "Sharing Score", function(e) {
-					console.log(e)
-				}, function(e) {
-					console.log(e)
-				});
-			}
-		}, ops);
+		blackberry.ui.dialog.customAskAsync(bbm_connected ? "Do you wanna share on other platforms?" : "Do you wanna share your score?",
+			buttons, function(s) {
+				console.log('[OK] DIALOG VALUE:' + s);
+				if (s == 0) {
+					var request = {
+						action: 'bb.action.SHARE',
+						mime: 'text/plain',
+						data: text,
+						target_type: ["VIEWER", "CARD"]
+					};
+					blackberry.invoke.card.invokeTargetPicker(request, "Sharing Score", function(e) {
+						console.log(e)
+					}, function(e) {
+						console.log(e)
+					});
+				}
+			}, ops);
 	} catch (e) {
 		showCustomToast("Exception in customDialog: " + e);
 	}
@@ -567,7 +577,6 @@ sndo.div.onclick = function() {
 
 
 
-
 var parody = {};
 parody.div = document.createElement('div');
 parody.div.style.width = '500px';
@@ -578,9 +587,6 @@ parody.div.style.fontFamily = 'Verdana';
 parody.div.style.fontSize = '24px';
 parody.div.style.fontWeight = 'bold';
 parody.div.style.zIndex = 87654;
-
-
-
 
 
 
@@ -624,9 +630,9 @@ for (var i = 0; i < scpts.length; i++) {
 	div.style.zIndex = 88887;
 	div.style['user-select'] = 'none';
 	div.style['-webkit-user-select'] = 'none';
-	div.style['-moz-user-select'] = 'none';
-	div.style['-ms-user-select'] = 'none';
-	div.style['-o-user-select'] = 'none';
+	//div.style['-moz-user-select'] = 'none';
+	// div.style['-ms-user-select'] = 'none';
+	// div.style['-o-user-select'] = 'none';
 	if ((xx == 0) && (yy == 0)) {
 		div.style.color = '#6c6c6c';
 		div.style.zIndex = 88888;
@@ -642,8 +648,6 @@ score.update = function() {
 
 
 
-
-
 var ground = {};
 
 ground.canvas = document.createElement('canvas');
@@ -656,26 +660,26 @@ ground.bit = loadGameImage('f2/ground.png');
 
 var vstrs = ['1'];
 var getValueStr = function(num) {
-		while (vstrs.length <= num) {
-			var s = vstrs[vstrs.length - 1];
-			var n = 0;
-			var r = 0;
-			var fs = '';
-			for (var i = s.length - 1; i >= 0; i--) {
-				n = Number("" + s.charAt(i));
-				n *= 2;
-				n += r;
-				r = Math.floor(n / 10);
-				n -= r * 10;
-				fs = n + '' + fs;
-			}
-			if (r > 0) {
-				fs = r + '' + fs;
-			}
-			vstrs.push(fs);
+	while (vstrs.length <= num) {
+		var s = vstrs[vstrs.length - 1];
+		var n = 0;
+		var r = 0;
+		var fs = '';
+		for (var i = s.length - 1; i >= 0; i--) {
+			n = Number("" + s.charAt(i));
+			n *= 2;
+			n += r;
+			r = Math.floor(n / 10);
+			n -= r * 10;
+			fs = n + '' + fs;
 		}
-		return vstrs[num - 1];
+		if (r > 0) {
+			fs = r + '' + fs;
+		}
+		vstrs.push(fs);
 	}
+	return vstrs[num - 1];
+}
 
 
 var text_colors = ['606060', '606060', '606060', 'ffffff'];
@@ -798,103 +802,103 @@ var wall_cell_count = 24;
 
 var walls = [];
 var newWall = function(wall_val) {
-		var wall = {};
-		wall.clc = null;
-		wall.cells = [];
-		wall.x = ww + 32;
-		wall.vx = -5 * vxr;
-		wall.value = wall_val;
-		var maxlen = 0;
-		var cells = wall.cells;
-		for (var i = 0; i < wall_cell_count; i++) {
-			var cell = newCell();
-			cell.x = wall.x;
-			cell.sty = (i + 1) * (cell_size + 14);
-			cell.y = (hh - 88) - cell.sty;
-			cell.sy = cell.y;
-			cell.vx = wall.vx;
-			game.div.appendChild(cell.div);
-			cells.push(cell);
-			cell.setValue(wall_val); //Math.max(1, game.cur_wall_val + Math.floor(Math.random()*4) - 2));
-			maxlen = Math.max(maxlen, cell.vs.length);
-			if ((cell.y <= 0) && (cells.length >= 4)) {
-				break;
-			}
+	var wall = {};
+	wall.clc = null;
+	wall.cells = [];
+	wall.x = ww + 32;
+	wall.vx = -5 * vxr;
+	wall.value = wall_val;
+	var maxlen = 0;
+	var cells = wall.cells;
+	for (var i = 0; i < wall_cell_count; i++) {
+		var cell = newCell();
+		cell.x = wall.x;
+		cell.sty = (i + 1) * (cell_size + 14);
+		cell.y = (hh - 88) - cell.sty;
+		cell.sy = cell.y;
+		cell.vx = wall.vx;
+		game.div.appendChild(cell.div);
+		cells.push(cell);
+		cell.setValue(wall_val); //Math.max(1, game.cur_wall_val + Math.floor(Math.random()*4) - 2));
+		maxlen = Math.max(maxlen, cell.vs.length);
+		if ((cell.y <= 0) && (cells.length >= 4)) {
+			break;
 		}
-
-		wall.ww = (cell_size + Math.max(0, 22 * (maxlen - 6)));
-		var right_value = wall_val; //+1;
-		var vals = [];
-		var v;
-		v = wall_val - Math.round(cells.length / 2);
-		if (v <= 1) v = 1;
-		for (var i = cells.length - 1; i >= 1; i--) {
-			v++;
-			if (v == wall_val) v += 2;
-			//if (v == right_value) v++;
-			vals.push(v);
-		}
-
-		var j = Math.floor(Math.random() * vals.length);
-		v = vals[j];
-		vals.splice(j, 1);
-		cells[cells.length - 1].setValue(v);
-
-		var j = Math.floor(Math.random() * vals.length);
-		v = vals[j];
-		vals.splice(j, 1);
-		cells[0].setValue(v);
-
-		vals.push(right_value);
-		for (var i = cells.length - 2; i >= 1; i--) {
-			var j = Math.floor(Math.random() * vals.length);
-			v = vals[j];
-			vals.splice(j, 1);
-			cells[i].setValue(v); //Math.max(1, game.cur_wall_val + Math.floor(Math.random()*4) - 2));
-		}
-
-		var clg = cells.length;
-		for (var i = cells.length - 1; i >= 0; i--) { // clone the wall into itself to pad the vertical scrolling
-			var cell = cells[i];
-
-			var cell2 = newCell();
-			cell2.x = wall.x;
-			cell2.sty = cell.sty + clg * (cell_size + 14);
-			cell2.y = (hh - 88) - cell2.sty;
-			cell2.sy = cell2.y;
-			cell2.vx = wall.vx;
-			game.div.appendChild(cell2.div);
-			cells.push(cell2);
-			cell2.setValue(cell.value);
-		}
-
-		for (var i = cells.length - 1; i >= 0; i--) {
-			var cell = cells[i];
-			cell.ww = wall.ww;
-			cell.div.style.width = cell.ww + 'px';
-		}
-
-		wall.kill = function() {
-			for (var i = this.cells.length - 1; i >= 0; i--) {
-				var cell = this.cells[i];
-				game.div.removeChild(cell.div);
-			}
-			for (var j = walls.length - 1; j >= 0; j--) {
-				if (walls[j] == this) {
-					walls.splice(j, 1);
-				}
-			}
-		}
-
-		wall.vspeed = (wall_val / 11 - 1) * .66;
-		if (wall.vspeed > 1.5) wall.vspeed = 1.5;
-		if (wall.vspeed < 0) wall.vspeed = 0;
-		wall.dir = (wall_val % 2 == 0) ? (1) : (-1);
-
-		walls.push(wall);
-
-		return wall;
 	}
+
+	wall.ww = (cell_size + Math.max(0, 22 * (maxlen - 6)));
+	var right_value = wall_val; //+1;
+	var vals = [];
+	var v;
+	v = wall_val - Math.round(cells.length / 2);
+	if (v <= 1) v = 1;
+	for (var i = cells.length - 1; i >= 1; i--) {
+		v++;
+		if (v == wall_val) v += 2;
+		//if (v == right_value) v++;
+		vals.push(v);
+	}
+
+	var j = Math.floor(Math.random() * vals.length);
+	v = vals[j];
+	vals.splice(j, 1);
+	cells[cells.length - 1].setValue(v);
+
+	var j = Math.floor(Math.random() * vals.length);
+	v = vals[j];
+	vals.splice(j, 1);
+	cells[0].setValue(v);
+
+	vals.push(right_value);
+	for (var i = cells.length - 2; i >= 1; i--) {
+		var j = Math.floor(Math.random() * vals.length);
+		v = vals[j];
+		vals.splice(j, 1);
+		cells[i].setValue(v); //Math.max(1, game.cur_wall_val + Math.floor(Math.random()*4) - 2));
+	}
+
+	var clg = cells.length;
+	for (var i = cells.length - 1; i >= 0; i--) { // clone the wall into itself to pad the vertical scrolling
+		var cell = cells[i];
+
+		var cell2 = newCell();
+		cell2.x = wall.x;
+		cell2.sty = cell.sty + clg * (cell_size + 14);
+		cell2.y = (hh - 88) - cell2.sty;
+		cell2.sy = cell2.y;
+		cell2.vx = wall.vx;
+		game.div.appendChild(cell2.div);
+		cells.push(cell2);
+		cell2.setValue(cell.value);
+	}
+
+	for (var i = cells.length - 1; i >= 0; i--) {
+		var cell = cells[i];
+		cell.ww = wall.ww;
+		cell.div.style.width = cell.ww + 'px';
+	}
+
+	wall.kill = function() {
+		for (var i = this.cells.length - 1; i >= 0; i--) {
+			var cell = this.cells[i];
+			game.div.removeChild(cell.div);
+		}
+		for (var j = walls.length - 1; j >= 0; j--) {
+			if (walls[j] == this) {
+				walls.splice(j, 1);
+			}
+		}
+	}
+
+	wall.vspeed = (wall_val / 11 - 1) * .66;
+	if (wall.vspeed > 1.5) wall.vspeed = 1.5;
+	if (wall.vspeed < 0) wall.vspeed = 0;
+	wall.dir = (wall_val % 2 == 0) ? (1) : (-1);
+
+	walls.push(wall);
+
+	return wall;
+}
 
 
 var doubling = false;
@@ -904,440 +908,440 @@ var fr = 0;
 var wgfr = 0;
 var ltm = 0;
 var oef = function() {
-		if (game_loaded) {
-			var ftm = new Date().getTime();
-			var tm;
-			var tj = 0;
-			while (ltm < ftm) {
-				ltm += 20;
-				tj++;
-				if (tj > 10) { // we're way too many frames behind. just give up.
-					ltm = ftm;
-					break;
-				}
-				if (game.started) {
-					fr++;
-					wgfr++;
-					ground.x -= 5 * vxr;
-					ground.x %= 48;
-					if (ground.x > 0) ground.x -= 48;
-					ground.canvas.style.left = ground.x + 'px';
+	if (game_loaded) {
+		var ftm = new Date().getTime();
+		var tm;
+		var tj = 0;
+		while (ltm < ftm) {
+			ltm += 20;
+			tj++;
+			if (tj > 10) { // we're way too many frames behind. just give up.
+				ltm = ftm;
+				break;
+			}
+			if (game.started) {
+				fr++;
+				wgfr++;
+				ground.x -= 5 * vxr;
+				ground.x %= 48;
+				if (ground.x > 0) ground.x -= 48;
+				ground.canvas.style.left = ground.x + 'px';
 
-					wing.fr += .25;
-					wing.fr += wing.vfr;
-					wing.vfr *= .9;
+				wing.fr += .25;
+				wing.fr += wing.vfr;
+				wing.vfr *= .9;
 
-					var deg = Math.cos(wing.fr / 2) * 23 + 15;
-					deg = Math.round(deg * 100) / 100;
-					var sc = 1;
-					var div = wing.canvas;
-					div.style.webkitTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
-					div.style.mozTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
-					div.style.msTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
-					div.style.oTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
-					div.style.transform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
-				}
+				var deg = Math.cos(wing.fr / 2) * 23 + 15;
+				deg = Math.round(deg * 100) / 100;
+				var sc = 1;
+				var div = wing.canvas;
+				div.style.webkitTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
+				//div.style.mozTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
+				//div.style.msTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
+				//div.style.oTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
+				//div.style.transform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
+			}
 
-				if (logo.showing) {
-					logo.a += .03;
-					if (logo.a >= 1) {
-						logo.a = 1;
-						logo.showing = false;
-					}
-					logo.img.style.opacity = logo.a;
+			if (logo.showing) {
+				logo.a += .03;
+				if (logo.a >= 1) {
+					logo.a = 1;
+					logo.showing = false;
 				}
-				if (logo.hiding) {
-					logo.a -= .05;
-					if (logo.a <= 0) {
-						logo.a = 0;
-						logo.hiding = false;
-					}
-					logo.img.style.opacity = logo.a;
+				logo.img.style.opacity = logo.a;
+			}
+			if (logo.hiding) {
+				logo.a -= .05;
+				if (logo.a <= 0) {
+					logo.a = 0;
+					logo.hiding = false;
 				}
-				if (logo.a > 0) {
-					logo.fr++;
-					logo.reposition();
+				logo.img.style.opacity = logo.a;
+			}
+			if (logo.a > 0) {
+				logo.fr++;
+				logo.reposition();
+			}
+			if (logo.a > .01) {
+				if (!logo.visible) {
+					logo.visible = true;
+					logo.img.style.display = 'inline';
 				}
-				if (logo.a > .01) {
-					if (!logo.visible) {
-						logo.visible = true;
-						logo.img.style.display = 'inline';
-					}
-				} else {
-					if (logo.visible) {
-						logo.visible = false;
-						logo.img.style.display = 'none';
-					}
+			} else {
+				if (logo.visible) {
+					logo.visible = false;
+					logo.img.style.display = 'none';
 				}
+			}
 
-				if (gameover.showing) {
-					gameover.a += .03;
-					if (gameover.a >= 1) {
-						gameover.a = 1;
-						gameover.showing = false;
-					}
-					gameover.img.style.opacity = gameover.a;
+			if (gameover.showing) {
+				gameover.a += .03;
+				if (gameover.a >= 1) {
+					gameover.a = 1;
+					gameover.showing = false;
 				}
-				if (gameover.hiding) {
-					gameover.a -= .1;
-					if (gameover.a <= 0) {
-						gameover.a = 0;
-						gameover.hiding = false;
-					}
-					gameover.img.style.opacity = gameover.a;
+				gameover.img.style.opacity = gameover.a;
+			}
+			if (gameover.hiding) {
+				gameover.a -= .1;
+				if (gameover.a <= 0) {
+					gameover.a = 0;
+					gameover.hiding = false;
 				}
-				if (gameover.a > 0) {
-					gameover.fr++;
-					gameover.reposition();
+				gameover.img.style.opacity = gameover.a;
+			}
+			if (gameover.a > 0) {
+				gameover.fr++;
+				gameover.reposition();
+			}
+			if (gameover.a > .01) {
+				if (!gameover.visible) {
+					gameover.visible = true;
+					gameover.img.style.display = 'inline';
 				}
-				if (gameover.a > .01) {
-					if (!gameover.visible) {
-						gameover.visible = true;
-						gameover.img.style.display = 'inline';
-					}
-				} else {
-					if (gameover.visible) {
-						gameover.visible = false;
-						gameover.img.style.display = 'none';
-					}
+			} else {
+				if (gameover.visible) {
+					gameover.visible = false;
+					gameover.img.style.display = 'none';
 				}
+			}
 
-				if (fbshare.showing) {
-					fbshare.a += .03;
-					if (fbshare.a >= 1) {
-						fbshare.a = 1;
-						fbshare.showing = false;
-					}
-					fbshare.img.style.opacity = fbshare.a;
+			if (fbshare.showing) {
+				fbshare.a += .03;
+				if (fbshare.a >= 1) {
+					fbshare.a = 1;
+					fbshare.showing = false;
 				}
-				if (fbshare.hiding) {
-					fbshare.a -= .1;
-					if (fbshare.a <= 0) {
-						fbshare.a = 0;
-						fbshare.hiding = false;
-					}
-					fbshare.img.style.opacity = fbshare.a;
+				fbshare.img.style.opacity = fbshare.a;
+			}
+			if (fbshare.hiding) {
+				fbshare.a -= .1;
+				if (fbshare.a <= 0) {
+					fbshare.a = 0;
+					fbshare.hiding = false;
 				}
-				if (fbshare.a > 0) {
-					fbshare.fr++;
-					fbshare.reposition();
+				fbshare.img.style.opacity = fbshare.a;
+			}
+			if (fbshare.a > 0) {
+				fbshare.fr++;
+				fbshare.reposition();
+			}
+			if (fbshare.a > .01) {
+				if (!fbshare.visible) {
+					fbshare.visible = true;
+					fbshare.img.style.display = 'inline';
 				}
-				if (fbshare.a > .01) {
-					if (!fbshare.visible) {
-						fbshare.visible = true;
-						fbshare.img.style.display = 'inline';
-					}
-				} else {
-					if (fbshare.visible) {
-						fbshare.visible = false;
-						fbshare.img.style.display = 'none';
-					}
+			} else {
+				if (fbshare.visible) {
+					fbshare.visible = false;
+					fbshare.img.style.display = 'none';
 				}
-				if (playagain.showing) {
-					playagain.a += .03;
-					if (playagain.a >= 1) {
-						playagain.a = 1;
-						playagain.showing = false;
-					}
-					playagain.img.style.opacity = playagain.a;
+			}
+			if (playagain.showing) {
+				playagain.a += .03;
+				if (playagain.a >= 1) {
+					playagain.a = 1;
+					playagain.showing = false;
 				}
-				if (playagain.hiding) {
-					playagain.a -= .1;
-					if (playagain.a <= 0) {
-						playagain.a = 0;
-						playagain.hiding = false;
-					}
-					playagain.img.style.opacity = playagain.a;
+				playagain.img.style.opacity = playagain.a;
+			}
+			if (playagain.hiding) {
+				playagain.a -= .1;
+				if (playagain.a <= 0) {
+					playagain.a = 0;
+					playagain.hiding = false;
 				}
-				if (playagain.a > 0) {
-					playagain.fr++;
-					playagain.reposition();
+				playagain.img.style.opacity = playagain.a;
+			}
+			if (playagain.a > 0) {
+				playagain.fr++;
+				playagain.reposition();
+			}
+			if (playagain.a > .01) {
+				if (!playagain.visible) {
+					playagain.visible = true;
+					playagain.img.style.display = 'inline';
 				}
-				if (playagain.a > .01) {
-					if (!playagain.visible) {
-						playagain.visible = true;
-						playagain.img.style.display = 'inline';
-					}
-				} else {
-					if (playagain.visible) {
-						playagain.visible = false;
-						playagain.img.style.display = 'none';
-					}
+			} else {
+				if (playagain.visible) {
+					playagain.visible = false;
+					playagain.img.style.display = 'none';
 				}
+			}
 
 
-				if (c2s.showing) {
-					c2s.a += .03;
-					if (c2s.a >= 1) {
-						c2s.a = 1;
-						c2s.showing = false;
-					}
-					c2s.img.style.opacity = c2s.a;
+			if (c2s.showing) {
+				c2s.a += .03;
+				if (c2s.a >= 1) {
+					c2s.a = 1;
+					c2s.showing = false;
 				}
-				if (c2s.hiding) {
-					c2s.a -= .1;
-					if (c2s.a <= 0) {
-						c2s.a = 0;
-						c2s.hiding = false;
-					}
-					c2s.img.style.opacity = c2s.a;
+				c2s.img.style.opacity = c2s.a;
+			}
+			if (c2s.hiding) {
+				c2s.a -= .1;
+				if (c2s.a <= 0) {
+					c2s.a = 0;
+					c2s.hiding = false;
 				}
-				if (c2s.a > .01) {
-					if (!c2s.visible) {
-						c2s.visible = true;
-						c2s.img.style.display = 'inline';
-					}
-				} else {
-					if (c2s.visible) {
-						c2s.visible = false;
-						c2s.img.style.display = 'none';
-					}
+				c2s.img.style.opacity = c2s.a;
+			}
+			if (c2s.a > .01) {
+				if (!c2s.visible) {
+					c2s.visible = true;
+					c2s.img.style.display = 'inline';
 				}
+			} else {
+				if (c2s.visible) {
+					c2s.visible = false;
+					c2s.img.style.display = 'none';
+				}
+			}
 
-				if (game.started) {
-					wgfr %= wall_fr_gap;
-					if (wgfr == 10) { // fr%150
-						var wall = newWall(game.cur_wall_val);
-						wall_fr_gap = Math.max(wall_fr_gap, wall_fr_start_gap + Math.floor(.5 * Math.ceil(wall.ww - cell_size)));
-						game.cur_wall_val++;
+			if (game.started) {
+				wgfr %= wall_fr_gap;
+				if (wgfr == 10) { // fr%150
+					var wall = newWall(game.cur_wall_val);
+					wall_fr_gap = Math.max(wall_fr_gap, wall_fr_start_gap + Math.floor(.5 * Math.ceil(wall.ww - cell_size)));
+					game.cur_wall_val++;
+				}
+				for (var i = walls.length - 1; i >= 0; i--) {
+					var wall = walls[i];
+					var mhv = wall.cells.length * (cell_size + 14);
+					var cells = wall.cells;
+					wall.x += wall.vx;
+					for (var j = cells.length - 1; j >= 0; j--) {
+						var cell = cells[j];
+						cell.vx = wall.vx;
+						cell.x = wall.x;
+						cell.y = (hh - 88) - (cell.sty + mhv * 30 + wall.vspeed * wall.dir * (wall.x - (wall.ww + 12 * 2) - bird.x)) % mhv; //(cell.sy + (wall.x + 16 - bird.x));
+						cell.updatePos();
 					}
-					for (var i = walls.length - 1; i >= 0; i--) {
-						var wall = walls[i];
-						var mhv = wall.cells.length * (cell_size + 14);
+					if (wall.x < (-wall.ww - 140)) {
+						wall.kill();
+					}
+				}
+				bird.x += (150 - bird.x) * .9; //bird.vx;
+				bird.y += Math.max(-8, Math.min(13, bird.vy));
+				bird.ang += (bird.dang - bird.ang) * .3;
+
+				var gclm = false;
+
+				var touching_wall = false;
+				for (var i = walls.length - 1; i >= 0; i--) {
+					var wall = walls[i];
+					var cx = bird.x;
+					if (!wall.passed) {
+						var dest_value = wall.value; // wall.value + 1;
+						var cspb = wall.ww + 12 * 2;
+						var clc = null;
+						var clm = false;
 						var cells = wall.cells;
-						wall.x += wall.vx;
-						for (var j = cells.length - 1; j >= 0; j--) {
-							var cell = cells[j];
-							cell.vx = wall.vx;
-							cell.x = wall.x;
-							cell.y = (hh - 88) - (cell.sty + mhv * 30 + wall.vspeed * wall.dir * (wall.x - (wall.ww + 12 * 2) - bird.x)) % mhv; //(cell.sy + (wall.x + 16 - bird.x));
-							cell.updatePos();
-						}
-						if (wall.x < (-wall.ww - 140)) {
-							wall.kill();
-						}
-					}
-					bird.x += (150 - bird.x) * .9; //bird.vx;
-					bird.y += Math.max(-8, Math.min(13, bird.vy));
-					bird.ang += (bird.dang - bird.ang) * .3;
-
-					var gclm = false;
-
-					var touching_wall = false;
-					for (var i = walls.length - 1; i >= 0; i--) {
-						var wall = walls[i];
-						var cx = bird.x;
-						if (!wall.passed) {
-							var dest_value = wall.value; // wall.value + 1;
-							var cspb = wall.ww + 12 * 2;
-							var clc = null;
-							var clm = false;
-							var cells = wall.cells;
-							var flrt = 1;
-							var flamt = 1;
-							if (!clm) {
-								if (wall.clc != null) {
-									clc = wall.clc;
-									clm = true;
-									gclm = true;
-								} else {
-									if (cx > (wall.x - cspb)) {
-										if (cx < (wall.x + cspb)) {
-											var cly = 999999;
-											for (var j = cells.length - 1; j >= 0; j--) {
-												var cell = cells[j];
-												var dy = Math.abs(cell.y - bird.y);
-												if (dy < cly) {
-													cly = dy;
-													clc = cell;
-													wall.clc = clc;
-													gclm = true;
-													clm = true;
-												}
+						var flrt = 1;
+						var flamt = 1;
+						if (!clm) {
+							if (wall.clc != null) {
+								clc = wall.clc;
+								clm = true;
+								gclm = true;
+							} else {
+								if (cx > (wall.x - cspb)) {
+									if (cx < (wall.x + cspb)) {
+										var cly = 999999;
+										for (var j = cells.length - 1; j >= 0; j--) {
+											var cell = cells[j];
+											var dy = Math.abs(cell.y - bird.y);
+											if (dy < cly) {
+												cly = dy;
+												clc = cell;
+												wall.clc = clc;
+												gclm = true;
+												clm = true;
 											}
 										}
 									}
 								}
 							}
-							if (clc == null) {
-								if (wall.value <= 3) {
-									for (var j = 0; j < cells.length; j++) { //cells.length-1; j>=0; j--) {
-										var cell = cells[j];
-										if (cell.value == dest_value) {
-											clc = cells[j];
-											clm = false;
-											flamt = .4;
-											flrt = .4;
-											break;
-										}
-									}
-								}
-							}
-							if (clc != null) {
-								var c = clc.background.split('#').join('');
-								var rr = parseInt(c.substr(0, 2), 16);
-								var gg = parseInt(c.substr(2, 2), 16);
-								var bb = parseInt(c.substr(4, 2), 16);
-								clc.clfr += flrt;
-								var amt = Math.sin(clc.clfr / 2) * 32 * flamt;
-								rr += amt;
-								gg += amt;
-								bb += amt;
-								rr = Math.max(0, Math.min(255, Math.round(rr)));
-								gg = Math.max(0, Math.min(255, Math.round(gg)));
-								bb = Math.max(0, Math.min(255, Math.round(bb)));
-								var s;
-								rr = ("00" + rr.toString(16));
-								gg = ("00" + gg.toString(16));
-								bb = ("00" + bb.toString(16));
-								c = '#' + rr.substr(rr.length - 2) + gg.substr(gg.length - 2) + bb.substr(bb.length - 2);
-								clc.div.style.background = c;
-								if (clm) {
-									//clc.a -= .05;
-									clc.div.style.opacity = Math.floor(clc.a * 100) / 100;
-									bird.y += (clc.y - bird.y) * clc.birdlock;
-									clc.birdlock += .1;
-									if (clc.birdlock >= 1) {
-										clc.birdlock = 1;
-									}
-									bird.vy *= .7;
-									bird.dang *= .8;
-									if (bird.y > (hh - 166)) {
-										bird.vy = -13;
-									}
-									if (bird.stuck_on_bottom || (bird.y >= (hh - 89 - (cell_size + 12 * 2)))) {
-										bird.stuck_on_bottom = true;
-										bird.y = hh - 89 - (cell_size + 12 * 2);
-										bird.vy = -14;
-									}
-									if (bird.stuck_on_top || (bird.y < -(cell_size + 12 * 2))) {
-										bird.stuck_on_top = true;
-										bird.y = -(cell_size + 12 * 2);
-										bird.vy = 0;
-									}
-									touching_wall = true;
-									if (clc.value != dest_value) {
-										punch.play();
-										bird.vy = -10;
-										game.ended = true;
-									} else if (bird.x > (clc.x + 16)) {
-										wall.passed = true;
-										if (!doubling) {
-											bird.setValue(bird.value + 1);
-											bird.stuck_on_bottom = false;
-											bird.stuck_on_top = false;
-											bird.ww = clc.ww;
-											bird.div.style.width = clc.ww + 'px';
-											doubling = true;
-											doubling_cell = clc;
-											coin.play();
-											points += 1;
-											score.update();
-										}
+						}
+						if (clc == null) {
+							if (wall.value <= 3) {
+								for (var j = 0; j < cells.length; j++) { //cells.length-1; j>=0; j--) {
+									var cell = cells[j];
+									if (cell.value == dest_value) {
+										clc = cells[j];
+										clm = false;
+										flamt = .4;
+										flrt = .4;
+										break;
 									}
 								}
 							}
 						}
-					}
-
-					if (doubling) {
-						bird.vvy = 0;
-						var wedc = 0; // want end doubling count
-						doubling_cell.a -= .15;
-						if (doubling_cell.a <= 0) {
-							doubling_cell.a = 0;
-							wedc++;
+						if (clc != null) {
+							var c = clc.background.split('#').join('');
+							var rr = parseInt(c.substr(0, 2), 16);
+							var gg = parseInt(c.substr(2, 2), 16);
+							var bb = parseInt(c.substr(4, 2), 16);
+							clc.clfr += flrt;
+							var amt = Math.sin(clc.clfr / 2) * 32 * flamt;
+							rr += amt;
+							gg += amt;
+							bb += amt;
+							rr = Math.max(0, Math.min(255, Math.round(rr)));
+							gg = Math.max(0, Math.min(255, Math.round(gg)));
+							bb = Math.max(0, Math.min(255, Math.round(bb)));
+							var s;
+							rr = ("00" + rr.toString(16));
+							gg = ("00" + gg.toString(16));
+							bb = ("00" + bb.toString(16));
+							c = '#' + rr.substr(rr.length - 2) + gg.substr(gg.length - 2) + bb.substr(bb.length - 2);
+							clc.div.style.background = c;
+							if (clm) {
+								//clc.a -= .05;
+								clc.div.style.opacity = Math.floor(clc.a * 100) / 100;
+								bird.y += (clc.y - bird.y) * clc.birdlock;
+								clc.birdlock += .1;
+								if (clc.birdlock >= 1) {
+									clc.birdlock = 1;
+								}
+								bird.vy *= .7;
+								bird.dang *= .8;
+								if (bird.y > (hh - 166)) {
+									bird.vy = -13;
+								}
+								if (bird.stuck_on_bottom || (bird.y >= (hh - 89 - (cell_size + 12 * 2)))) {
+									bird.stuck_on_bottom = true;
+									bird.y = hh - 89 - (cell_size + 12 * 2);
+									bird.vy = -14;
+								}
+								if (bird.stuck_on_top || (bird.y < -(cell_size + 12 * 2))) {
+									bird.stuck_on_top = true;
+									bird.y = -(cell_size + 12 * 2);
+									bird.vy = 0;
+								}
+								touching_wall = true;
+								if (clc.value != dest_value) {
+									punch.play();
+									bird.vy = -10;
+									game.ended = true;
+								} else if (bird.x > (clc.x + 16)) {
+									wall.passed = true;
+									if (!doubling) {
+										bird.setValue(bird.value + 1);
+										bird.stuck_on_bottom = false;
+										bird.stuck_on_top = false;
+										bird.ww = clc.ww;
+										bird.div.style.width = clc.ww + 'px';
+										doubling = true;
+										doubling_cell = clc;
+										coin.play();
+										points += 1;
+										score.update();
+									}
+								}
+							}
 						}
-						doubling_cell.dsa -= .15;
-						if (doubling_cell.dsa <= 0) {
-							doubling_cell.dsa = 0;
-							wedc++;
-						}
-						var dsz = .5 * Math.sin(Math.PI * doubling_cell.dsa);
-						bird.dsz = dsz;
-						doubling_cell.div.style.opacity = Math.floor(doubling_cell.a * 100) / 100;
-						if (wedc == 2) { // all conditions requiring doubling to end are true
-							wedc = 0;
-							doubling = false;
-						}
 					}
+				}
 
-					if ((!touching_wall) && (!doubling)) {
-						bird.vvy += .1;
-						if (bird.vvy > 1) bird.vvy = 1;
-						bird.vy += .65 * bird.vvy;
-						if (bird.vy >= 13) bird.vy = 13;
-						bird.dang += .025;
-						if (bird.dang > .5) bird.dang = .5;
+				if (doubling) {
+					bird.vvy = 0;
+					var wedc = 0; // want end doubling count
+					doubling_cell.a -= .15;
+					if (doubling_cell.a <= 0) {
+						doubling_cell.a = 0;
+						wedc++;
 					}
-
-
-
-					bird.updatePos();
-					var div = bird.div;
-					var deg = bird.ang * (cell_size / Math.max(cell_size, cell_size + (bird.ww - cell_size) * 2)) * 180 / Math.PI;
-					deg = Math.round(deg * 100) / 100;
-					var sc = 1 + bird.dsz;
-					div.style.webkitTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
-					div.style.mozTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
-					div.style.msTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
-					div.style.oTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
-					div.style.transform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
-
-					var mxy = hh - 88 - (cell_size + 12 * 2);
-
-					if (bird.y > mxy) {
-						if (!gclm) {
-							punch.play();
-							bird.vy = -10;
-							game.ended = true;
-						}
+					doubling_cell.dsa -= .15;
+					if (doubling_cell.dsa <= 0) {
+						doubling_cell.dsa = 0;
+						wedc++;
 					}
+					var dsz = .5 * Math.sin(Math.PI * doubling_cell.dsa);
+					bird.dsz = dsz;
+					doubling_cell.div.style.opacity = Math.floor(doubling_cell.a * 100) / 100;
+					if (wedc == 2) { // all conditions requiring doubling to end are true
+						wedc = 0;
+						doubling = false;
+					}
+				}
 
-					if (game.ended) { // •••�?you have to implement this. when the game is over, this is set to true.
-						game.end_fr = 0;
-						deathflash.style.display = 'inline';
-						deathflash.style.opacity = .8;
-						game.started = false;
+				if ((!touching_wall) && (!doubling)) {
+					bird.vvy += .1;
+					if (bird.vvy > 1) bird.vvy = 1;
+					bird.vy += .65 * bird.vvy;
+					if (bird.vy >= 13) bird.vy = 13;
+					bird.dang += .025;
+					if (bird.dang > .5) bird.dang = .5;
+				}
+
+
+
+				bird.updatePos();
+				var div = bird.div;
+				var deg = bird.ang * (cell_size / Math.max(cell_size, cell_size + (bird.ww - cell_size) * 2)) * 180 / Math.PI;
+				deg = Math.round(deg * 100) / 100;
+				var sc = 1 + bird.dsz;
+				div.style.webkitTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
+				// div.style.mozTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
+				// div.style.msTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
+				// div.style.oTransform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
+				// div.style.transform = 'rotate(' + deg + 'deg) scale(' + sc + ',' + sc + ')';
+
+				var mxy = hh - 88 - (cell_size + 12 * 2);
+
+				if (bird.y > mxy) {
+					if (!gclm) {
+						punch.play();
+						bird.vy = -10;
 						game.ended = true;
-						gameover.hiding = false;
-						gameover.showing = true;
-						fbshare.hiding = false;
-						fbshare.showing = true;
-						playagain.hiding = false;
-						playagain.showing = true;
-						if (points > highscore) {
-							highscore = points;
-						}
+					}
+				}
+
+				if (game.ended) { // â€¢â€¢â€¢â€?you have to implement this. when the game is over, this is set to true.
+					game.end_fr = 0;
+					deathflash.style.display = 'inline';
+					deathflash.style.opacity = .8;
+					game.started = false;
+					game.ended = true;
+					gameover.hiding = false;
+					gameover.showing = true;
+					fbshare.hiding = false;
+					fbshare.showing = true;
+					playagain.hiding = false;
+					playagain.showing = true;
+					if (points > highscore) {
+						highscore = points;
 					}
 				}
 			}
 		}
-
-		if (game.ended) {
-			game.end_fr++;
-			var op = .8 * (1 - game.end_fr / 20);
-			if (op < 0) {
-				deathflash.style.display = 'none';
-			} else {
-				deathflash.style.opacity = op;
-			}
-			var div = bird.div;
-			div.style.webkitTransform = 'rotate(0deg) scale(1,1)';
-			div.style.mozTransform = 'rotate(0deg) scale(1,1)';
-			div.style.msTransform = 'rotate(0deg) scale(1,1)';
-			div.style.oTransform = 'rotate(0deg) scale(1,1)';
-			div.style.transform = 'rotate(0deg) scale(1,1)';
-			bird.vy += .55;
-			bird.y += bird.vy;
-			var mxy = hh - 88 - (cell_size + 12 * 2);
-			if (bird.y > mxy) {
-				bird.y = mxy;
-			}
-			bird.updatePos();
-		}
-		raf(oef);
 	}
+
+	if (game.ended) {
+		game.end_fr++;
+		var op = .8 * (1 - game.end_fr / 20);
+		if (op < 0) {
+			deathflash.style.display = 'none';
+		} else {
+			deathflash.style.opacity = op;
+		}
+		var div = bird.div;
+		div.style.webkitTransform = 'rotate(0deg) scale(1,1)';
+		// div.style.mozTransform = 'rotate(0deg) scale(1,1)';
+		// div.style.msTransform = 'rotate(0deg) scale(1,1)';
+		// div.style.oTransform = 'rotate(0deg) scale(1,1)';
+		// div.style.transform = 'rotate(0deg) scale(1,1)';
+		bird.vy += .55;
+		bird.y += bird.vy;
+		var mxy = hh - 88 - (cell_size + 12 * 2);
+		if (bird.y > mxy) {
+			bird.y = mxy;
+		}
+		bird.updatePos();
+	}
+	raf(oef);
+}
 
 
 window.onresize = function() {

@@ -21,7 +21,7 @@
     <preference name="ChildBrowser" value="enable" />
     <preference name="DiskCache" value="enable" />
     <preference name="HideKeyboardFormAccessoryBar" value="disable" />
-    <preference name="Orientation" value="default" />
+    <preference name="Orientation" value="landscape" />
     <preference name="PopupBlocker" value="disable" />
     <preference name="WebSecurity" value="enable" />
 </widget>
